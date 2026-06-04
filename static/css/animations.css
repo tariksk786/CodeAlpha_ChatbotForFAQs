@@ -1,0 +1,179 @@
+/* 
+ * Animations for AI FAQ Chatbot Application
+ * Premium visual styling additions
+ */
+
+/* Glowing Background Blobs */
+.blob-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.bg-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    mix-blend-mode: screen;
+}
+
+.blob-1 {
+    top: -10%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: var(--primary);
+    animation: float-blob 25s infinite alternate ease-in-out;
+}
+
+.blob-2 {
+    bottom: -10%;
+    right: -10%;
+    width: 45vw;
+    height: 45vw;
+    background: var(--secondary);
+    animation: float-blob 20s infinite alternate-reverse ease-in-out;
+    animation-delay: 2s;
+}
+
+.blob-3 {
+    top: 40%;
+    left: 60%;
+    width: 35vw;
+    height: 35vw;
+    background: var(--accent);
+    animation: float-blob 30s infinite alternate ease-in-out;
+    animation-delay: 4s;
+}
+
+@keyframes float-blob {
+    0% {
+        transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+        transform: translate(40px, -60px) scale(1.15);
+    }
+    66% {
+        transform: translate(-30px, 40px) scale(0.9);
+    }
+    100% {
+        transform: translate(0px, 0px) scale(1);
+    }
+}
+
+/* Page fade-in */
+.fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Typing Indicator Animation */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 18px;
+}
+
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    animation: typing-bounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) {
+    animation-delay: 0s;
+}
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing-bounce {
+    0%, 100%, 80% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-6px);
+    }
+}
+
+/* Glowing Border Transitions */
+.glow-on-hover {
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.glow-on-hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 15px var(--accent);
+    opacity: 0;
+    transition: var(--transition-smooth);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.glow-on-hover:hover::after {
+    opacity: 0.35;
+}
+
+/* Skeleton Loading Animation */
+.skeleton-box {
+    display: inline-block;
+    height: 15px;
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    width: 100%;
+}
+
+.skeleton-box::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.03) 20%,
+        rgba(255, 255, 255, 0.06) 60%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: shimmer 1.5s infinite;
+    content: '';
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Management Dashboard | FAQ Whisperer AI</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+
+    <!-- Background Blobs -->
+    <div class="blob-container">
+        <div class="bg-blob blob-1" style="opacity: 0.08;"></div>
+        <div class="bg-blob blob-2" style="opacity: 0.08;"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand navbar-dark navbar-glass">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="fas fa-robot text-gradient me-2"></i>
+                <span class="fw-bold fs-5">FAQ Whisperer AI</span>
+            </a>
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <span class="nav-link active small text-muted"><i class="fas fa-user-circle me-1"></i> Admin Session</span>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-sm btn-outline-danger ms-2 px-3" href="/api/logout"><i class="fas fa-sign-out-alt"></i></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Layout Grid -->
+    <div class="container-fluid">
+        <div class="row admin-layout">
+            
+            <!-- Sidebar Panel -->
+            <div class="col-md-3 sidebar-glass">
+                <div class="d-flex flex-column justify-content-between h-100">
+                    <div>
+                        <div class="text-center py-4 mb-3 border-bottom border-light border-opacity-10">
+                            <h5 class="fw-bold m-0 text-gradient">Control Panel</h5>
+                            <span class="text-muted small">System Operations</span>
+                        </div>
+                        
+                        <div class="nav flex-column">
+                            <a href="/admin" class="sidebar-link active">
+                                <i class="fas fa-database"></i> FAQs Management
+                            </a>
+                            <a href="/analytics" class="sidebar-link">
+                                <i class="fas fa-chart-bar"></i> Analytics Dashboard
+                            </a>
+                            <a href="/chatbot" class="sidebar-link">
+                                <i class="fas fa-comments"></i> Launch Chatbot
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="py-3 border-top border-light border-opacity-10 text-center">
+                        <a href="/api/logout" class="btn btn-sm btn-glass-secondary w-100">
+                            <i class="fas fa-sign-out-alt me-1"></i> Log Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Management Panel -->
+            <div class="col-md-9 p-4">
+                
+                <!-- Dashboard Welcome Title -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="fw-bold m-0">Manage Database FAQs</h2>
+                        <p class="text-muted m-0">Add, edit, or import FAQ records below.</p>
+                    </div>
+                    <button id="btn-add-faq" class="btn btn-glass-primary glow-on-hover px-4 py-2">
+                        <i class="fas fa-plus me-1"></i> Add FAQ Record
+                    </button>
+                </div>
+
+                <!-- Stats card row -->
+                <div class="metrics-grid">
+                    <div class="glass-card metric-card">
+                        <div class="metric-title">Total Database FAQs</div>
+                        <div class="metric-value" id="total-faqs-count">-</div>
+                        <i class="fas fa-list-alt metric-icon"></i>
+                    </div>
+                    
+                    <!-- File Upload Panel -->
+                    <div class="glass-card p-4 d-flex flex-column justify-content-center" style="grid-column: span 2;">
+                        <h6 class="fw-bold mb-2 small uppercase text-muted">Bulk Operations (Import/Export)</h6>
+                        <div class="d-flex flex-wrap align-items-center gap-3">
+                            <div class="flex-grow-1">
+                                <input type="file" id="import-file" class="form-control form-glass-input" accept=".csv,.json">
+                            </div>
+                            <button id="btn-import" class="btn btn-glass-secondary">
+                                <i class="fas fa-file-import me-1"></i> Upload File
+                            </button>
+                            <div class="dropdown">
+                                <button class="btn btn-glass-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-file-export me-1"></i> Download FAQs
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark bg-dark border-light border-opacity-10">
+                                    <li><a class="dropdown-item" href="/api/faqs/export/csv"><i class="fas fa-file-csv me-2"></i> Save as CSV</a></li>
+                                    <li><a class="dropdown-item" href="/api/faqs/export/json"><i class="fas fa-file-code me-2"></i> Save as JSON</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <span class="text-muted small mt-2"><i class="fas fa-info-circle me-1"></i> Upload CSV must contain headers: <code>question</code>, <code>answer</code>, <code>category</code></span>
+                    </div>
+                </div>
+
+                <!-- Main Data Card -->
+                <div class="glass-card data-table-card fade-in-up">
+                    
+                    <!-- Toolbar filters -->
+                    <div class="table-toolbar">
+                        <div class="d-flex gap-2 flex-grow-1" style="max-width: 480px;">
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-end-0 border-light border-opacity-10 text-muted">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                                <input type="text" id="faq-search" class="form-control form-glass-input border-start-0" placeholder="Search questions or answers...">
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <select id="faq-category-filter" class="form-select form-glass-input" style="min-width: 180px;">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Responsive Table -->
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th style="width: 140px;">Category</th>
+                                    <th>Question</th>
+                                    <th>Answer</th>
+                                    <th style="width: 110px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="faq-table-body">
+                                <!-- Data rows rendered dynamically by admin.js -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <div id="pagination-container" class="custom-pagination">
+                        <!-- Pagination buttons rendered dynamically by admin.js -->
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Add / Edit Modal -->
+    <div class="modal fade" id="faqModal" tabindex="-1" aria-labelledby="faqModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content modal-glass-content">
+                <form id="faq-form">
+                    
+                    <div class="modal-header modal-glass-header">
+                        <h5 class="modal-title fw-bold" id="faqModalLabel">Add New FAQ</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="modal-body p-4">
+                        <!-- Hidden ID field -->
+                        <input type="hidden" id="faq-id">
+
+                        <!-- Question Input -->
+                        <div class="mb-3">
+                            <label for="faq-question" class="form-label small text-muted fw-bold">FAQ Question</label>
+                            <textarea id="faq-question" class="form-control form-glass-input" rows="2" placeholder="What is the question?" required></textarea>
+                        </div>
+
+                        <!-- Answer Input -->
+                        <div class="mb-3">
+                            <label for="faq-answer" class="form-label small text-muted fw-bold">FAQ Answer</label>
+                            <textarea id="faq-answer" class="form-control form-glass-input" rows="4" placeholder="Provide the detailed answer response..." required></textarea>
+                        </div>
+
+                        <!-- Category Input -->
+                        <div class="mb-3">
+                            <label for="faq-category" class="form-label small text-muted fw-bold">Category</label>
+                            <input type="text" id="faq-category" class="form-control form-glass-input" placeholder="General, Technical, Billing, etc." required list="category-suggestions">
+                            <datalist id="category-suggestions">
+                                <option value="General">
+                                <option value="Technical">
+                                <option value="Features">
+                                <option value="Deployment">
+                            </datalist>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer modal-glass-footer">
+                        <button type="button" class="btn btn-glass-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-glass-primary">Save Changes</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

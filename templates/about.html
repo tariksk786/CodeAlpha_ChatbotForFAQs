@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Specifications | FAQ Whisperer AI</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+
+    <!-- Background Blobs -->
+    <div class="blob-container">
+        <div class="bg-blob blob-1"></div>
+        <div class="bg-blob blob-2" style="opacity: 0.1;"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-glass fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="fas fa-robot text-gradient me-2 fs-3"></i>
+                <span class="fw-bold tracking-wide">FAQ Whisperer AI</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/chatbot"><i class="fas fa-comments me-1"></i> Chatbot</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/about"><i class="fas fa-info-circle me-1"></i> Tech Specs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin"><i class="fas fa-user-shield me-1"></i> Admin</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main About Content -->
+    <div class="container py-5" style="margin-top: 100px;">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                
+                <!-- Page Title -->
+                <div class="text-center mb-5 fade-in-up">
+                    <h1 class="display-4 fw-bold">System Architecture</h1>
+                    <p class="text-muted" style="max-width: 600px; margin: 0 auto;">
+                        Under the hood of the FAQ Whisperer AI. Understanding how natural language is processed and matched.
+                    </p>
+                </div>
+
+                <!-- 1. NLP Pipeline Explanation -->
+                <div class="glass-card p-5 mb-4 fade-in-up">
+                    <h3 class="fw-bold text-gradient mb-4"><i class="fas fa-microchip me-2"></i>NLP Text Preprocessing Pipeline</h3>
+                    <p class="text-muted">
+                        When a user speaks or types a query, it passes through five sequential preprocessing operations before vector calculation occurs. This isolates search intent from grammatical noise:
+                    </p>
+                    
+                    <div class="row g-4 mt-2">
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush bg-transparent">
+                                <li class="list-group-item bg-transparent text-light border-light border-opacity-10 py-3">
+                                    <strong class="text-info">1. Case Normalization:</strong> Conversion of all characters to lower case to make matching case-insensitive.
+                                </li>
+                                <li class="list-group-item bg-transparent text-light border-light border-opacity-10 py-3">
+                                    <strong class="text-info">2. Punctuation Stripping:</strong> Standard punctuation symbols are removed to prevent symbol-word attachments.
+                                </li>
+                                <li class="list-group-item bg-transparent text-light border-light border-opacity-10 py-3">
+                                    <strong class="text-info">3. Tokenization:</strong> Breaking sentence strings into individual word lists using NLTK's word tokenizer.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush bg-transparent">
+                                <li class="list-group-item bg-transparent text-light border-light border-opacity-10 py-3">
+                                    <strong class="text-info">4. Stopword Removal:</strong> Discarding high-frequency, non-semantic words (e.g., 'the', 'is', 'at') using the NLTK English corpus.
+                                </li>
+                                <li class="list-group-item bg-transparent text-light border-light border-opacity-10 py-3">
+                                    <strong class="text-info">5. Lemmatization:</strong> Reducing tokens to their dictionary root representation using NLTK WordNet Lemmatizer.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. TF-IDF & Cosine Similarity Explanation -->
+                <div class="glass-card p-5 mb-4 fade-in-up">
+                    <h3 class="fw-bold text-gradient mb-4"><i class="fas fa-calculator me-2"></i>Similarity Matching Engine</h3>
+                    
+                    <div class="row align-items-center">
+                        <div class="col-md-7">
+                            <h5 class="fw-bold text-info">TF-IDF Vectorization</h5>
+                            <p class="text-muted">
+                                We utilize Term Frequency-Inverse Document Frequency (TF-IDF) from Scikit-Learn to represent our FAQs and queries in a high-dimensional vector space. TF-IDF measures how important a word is in a specific document relative to all documents in the corpus.
+                            </p>
+                            <h5 class="fw-bold text-info mt-4">Cosine Similarity</h5>
+                            <p class="text-muted">
+                                Once vectorized, the angle between the query vector and all FAQ vectors is calculated. Cosine similarity calculates the cosine of the angle between two vectors, resulting in a confidence rating between 0% (orthogonal vectors) and 100% (identical directions).
+                            </p>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="bg-dark bg-opacity-40 p-4 rounded-3 border border-light border-opacity-10 text-center">
+                                <h6 class="fw-bold mb-3">Cosine Similarity Formula</h6>
+                                <div class="fs-4 text-info font-monospace my-3">
+                                    cos(θ) = (A • B) / (||A|| ||B||)
+                                </div>
+                                <p class="small text-muted mb-0">
+                                    A = Query Vector<br>
+                                    B = FAQ Vector
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-light border-opacity-10 my-4">
+
+                    <h5 class="fw-bold text-info"><i class="fas fa-spell-check me-2"></i>Fuzzy string Fallback</h5>
+                    <p class="text-muted">
+                        To protect matching accuracy against spelling mistakes, typos, or single-character modifications, our engine blends in a fuzzy matching score computed using Python's standard `difflib.SequenceMatcher` (which implements the Ratcliff-Obershelp gesture pattern matching algorithm). If TF-IDF cosine matching falls short, fuzzy matching ensures users still find what they need.
+                    </p>
+                </div>
+
+                <!-- 3. Tech Stack Grid -->
+                <div class="glass-card p-5 mb-5 fade-in-up">
+                    <h3 class="fw-bold text-gradient mb-4"><i class="fas fa-layer-group me-2"></i>Technology Stack</h3>
+                    <div class="row g-4 text-center">
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-dark bg-opacity-30 rounded-3 border border-light border-opacity-10">
+                                <div class="fs-1 text-info mb-2"><i class="fab fa-python"></i></div>
+                                <div class="fw-bold">Python</div>
+                                <span class="text-muted small">Backend Engine</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-dark bg-opacity-30 rounded-3 border border-light border-opacity-10">
+                                <div class="fs-1 text-info mb-2"><i class="fas fa-leaf"></i></div>
+                                <div class="fw-bold">Flask</div>
+                                <span class="text-muted small">REST Web API</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-dark bg-opacity-30 rounded-3 border border-light border-opacity-10">
+                                <div class="fs-1 text-info mb-2"><i class="fas fa-database"></i></div>
+                                <div class="fw-bold">SQLite 3</div>
+                                <span class="text-muted small">Relational Database</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="p-3 bg-dark bg-opacity-30 rounded-3 border border-light border-opacity-10">
+                                <div class="fs-1 text-info mb-2"><i class="fab fa-bootstrap"></i></div>
+                                <div class="fw-bold">Bootstrap 5</div>
+                                <span class="text-muted small">Premium Responsive UI</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Actions -->
+                <div class="text-center mb-5">
+                    <a href="/chatbot" class="btn btn-glass-primary btn-lg px-5 py-3">
+                        <i class="fas fa-comments me-2"></i> Go to Chatbot Interface
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 text-center border-top border-light border-opacity-10 mt-5">
+        <div class="container text-muted small">
+            <p class="mb-0">&copy; 2026 FAQ Whisperer AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

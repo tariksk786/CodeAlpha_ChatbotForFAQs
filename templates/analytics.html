@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard | FAQ Whisperer AI</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+
+    <!-- Background Blobs -->
+    <div class="blob-container">
+        <div class="bg-blob blob-1" style="opacity: 0.08;"></div>
+        <div class="bg-blob blob-2" style="opacity: 0.08;"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand navbar-dark navbar-glass">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="fas fa-robot text-gradient me-2"></i>
+                <span class="fw-bold fs-5">FAQ Whisperer AI</span>
+            </a>
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <span class="nav-link active small text-muted"><i class="fas fa-chart-line me-1"></i> System Analytics</span>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-sm btn-outline-danger ms-2 px-3" href="/api/logout"><i class="fas fa-sign-out-alt"></i></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Layout Grid -->
+    <div class="container-fluid">
+        <div class="row admin-layout">
+            
+            <!-- Sidebar Panel -->
+            <div class="col-md-3 sidebar-glass">
+                <div class="d-flex flex-column justify-content-between h-100">
+                    <div>
+                        <div class="text-center py-4 mb-3 border-bottom border-light border-opacity-10">
+                            <h5 class="fw-bold m-0 text-gradient">Control Panel</h5>
+                            <span class="text-muted small">System Operations</span>
+                        </div>
+                        
+                        <div class="nav flex-column">
+                            <a href="/admin" class="sidebar-link">
+                                <i class="fas fa-database"></i> FAQs Management
+                            </a>
+                            <a href="/analytics" class="sidebar-link active">
+                                <i class="fas fa-chart-bar"></i> Analytics Dashboard
+                            </a>
+                            <a href="/chatbot" class="sidebar-link">
+                                <i class="fas fa-comments"></i> Launch Chatbot
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="py-3 border-top border-light border-opacity-10 text-center">
+                        <a href="/api/logout" class="btn btn-sm btn-glass-secondary w-100">
+                            <i class="fas fa-sign-out-alt me-1"></i> Log Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Management Panel -->
+            <div class="col-md-9 p-4">
+                
+                <!-- Dashboard Welcome Title -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="fw-bold m-0">System Analytics & Logs</h2>
+                        <p class="text-muted m-0">Track chatbot volumes, query trends, and user feedback aggregates.</p>
+                    </div>
+                </div>
+
+                <!-- Stats card row -->
+                <div class="metrics-grid">
+                    <!-- Total Queries -->
+                    <div class="glass-card metric-card">
+                        <div class="metric-title">Total Queries Logged</div>
+                        <div class="metric-value" id="stat-total-queries">-</div>
+                        <i class="fas fa-question-circle metric-icon"></i>
+                    </div>
+
+                    <!-- Avg Confidence -->
+                    <div class="glass-card metric-card">
+                        <div class="metric-title">Average Matching Confidence</div>
+                        <div class="metric-value" id="stat-avg-confidence">-</div>
+                        <i class="fas fa-bullseye metric-icon"></i>
+                    </div>
+
+                    <!-- Feedback Rate -->
+                    <div class="glass-card metric-card">
+                        <div class="metric-title">Helpfulness Rating</div>
+                        <div class="metric-value" id="stat-feedback-rate">-</div>
+                        <div class="text-muted small" id="stat-feedback-subtext">-</div>
+                        <i class="fas fa-thumbs-up metric-icon"></i>
+                    </div>
+
+                    <!-- Total FAQs -->
+                    <div class="glass-card metric-card">
+                        <div class="metric-title">Knowledgebase Entries</div>
+                        <div class="metric-value" id="stat-total-faqs">-</div>
+                        <i class="fas fa-hdd metric-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Graphical Charts Panels -->
+                <div class="row g-4 mb-4">
+                    <!-- 1. Daily Queries volume -->
+                    <div class="col-lg-8">
+                        <div class="glass-card p-4 h-100">
+                            <h5 class="fw-bold mb-3"><i class="fas fa-chart-line me-2 text-info"></i>Daily Query Volume & Confidence Trends</h5>
+                            <div class="chart-container-card">
+                                <canvas id="chart-trends"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Category Distribution -->
+                    <div class="col-lg-4">
+                        <div class="glass-card p-4 h-100">
+                            <h5 class="fw-bold mb-3"><i class="fas fa-chart-pie me-2 text-info"></i>Query Split by Category</h5>
+                            <div class="chart-container-card">
+                                <canvas id="chart-categories"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Top FAQs Matching -->
+                    <div class="col-12">
+                        <div class="glass-card p-4">
+                            <h5 class="fw-bold mb-3"><i class="fas fa-chart-bar me-2 text-info"></i>Top Matched FAQs Frequency</h5>
+                            <div class="chart-container-card" style="height: 280px;">
+                                <canvas id="chart-top-faqs"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity Logs Table -->
+                <div class="glass-card p-4 fade-in-up">
+                    <h5 class="fw-bold mb-4"><i class="fas fa-history me-2 text-info"></i>Recent Query Activity Log</h5>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped table-hover align-middle border border-light border-opacity-10" style="background: rgba(15,23,42,0.3);">
+                            <thead>
+                                <tr>
+                                    <th style="width: 180px;">Timestamp</th>
+                                    <th>User Query</th>
+                                    <th>Matched FAQ Question</th>
+                                    <th style="width: 120px;">Confidence</th>
+                                    <th style="width: 100px;" class="text-center">Feedback</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-logs-table-body">
+                                <!-- Data logs rendered dynamically by analytics.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+</body>
+</html>

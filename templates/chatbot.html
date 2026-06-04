@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot interface | FAQ Whisperer AI</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+
+    <!-- Background Blobs -->
+    <div class="blob-container">
+        <div class="bg-blob blob-1" style="opacity: 0.1;"></div>
+        <div class="bg-blob blob-2" style="opacity: 0.1;"></div>
+    </div>
+
+    <!-- Navigation Navbar -->
+    <nav class="navbar navbar-expand navbar-dark navbar-glass">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="fas fa-robot text-gradient me-2"></i>
+                <span class="fw-bold fs-5 d-none d-sm-inline">FAQ Whisperer AI</span>
+            </a>
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fas fa-home me-1"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about"><i class="fas fa-info-circle me-1"></i> About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin"><i class="fas fa-user-shield me-1"></i> Dashboard</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4 py-3">
+        <div class="row g-4 admin-layout" style="min-height: calc(100vh - 100px);">
+            
+            <!-- Sidebar Panel: Tools & Controls -->
+            <div class="col-md-3">
+                <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="fw-bold mb-4 text-gradient"><i class="fas fa-sliders-h me-2"></i>Assistant Tools</h5>
+                        
+                        <div class="d-grid gap-3 mb-4">
+                            <!-- Toggle Voice Synthesis -->
+                            <button id="voice-output-toggle" class="btn btn-glass-secondary text-start" title="Enable AI Voice Output">
+                                <i class="fas fa-volume-mute me-2"></i> Read Aloud: Off
+                            </button>
+                            
+                            <!-- Toggle Dark/Light Mode -->
+                            <button id="theme-toggle" class="btn btn-glass-secondary text-start" title="Switch Theme">
+                                <i class="fas fa-sun me-2"></i> Change Theme
+                            </button>
+                        </div>
+                        
+                        <hr class="border-light border-opacity-10 my-4">
+                        
+                        <h6 class="fw-bold text-muted small uppercase mb-3">Conversation Options</h6>
+                        <div class="d-grid gap-3">
+                            <!-- Clear History -->
+                            <button id="clear-history" class="btn btn-sm btn-outline-danger text-start py-2">
+                                <i class="fas fa-trash-alt me-2"></i> Clear Chat History
+                            </button>
+                            <!-- Export TXT -->
+                            <button id="export-txt" class="btn btn-sm btn-glass-secondary text-start py-2">
+                                <i class="fas fa-file-alt me-2"></i> Download as Text
+                            </button>
+                            <!-- Export PDF -->
+                            <button id="export-pdf" class="btn btn-sm btn-glass-secondary text-start py-2">
+                                <i class="fas fa-file-pdf me-2"></i> Export PDF Transcript
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-muted small mt-4 pt-3 border-top border-light border-opacity-10">
+                        <i class="fas fa-shield-alt me-1"></i> Local storage secure session active.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Dialogue Container -->
+            <div class="col-md-9 d-flex flex-column">
+                <div class="glass-card chat-container">
+                    
+                    <!-- Chat Messages list -->
+                    <div id="chat-messages" class="chat-messages-box">
+                        
+                        <!-- Welcome / Initial Suggestions chips -->
+                        <div id="initial-suggestions" class="text-center py-5 fade-in-up">
+                            <div class="feature-icon-wrapper mx-auto mb-4">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h4 class="fw-bold mb-2">Welcome to FAQ Whisperer AI!</h4>
+                            <p class="text-muted mb-4 mx-auto" style="max-width: 480px;">
+                                Ask any question in natural language, or test the engine with one of our loaded suggestions below:
+                            </p>
+                            
+                            <div class="row g-3 justify-content-center px-4" style="max-width: 720px; margin: 0 auto;">
+                                <div class="col-sm-6">
+                                    <div class="glass-card p-3 h-100 suggestion-card cursor-pointer" data-question="What is this AI FAQ Chatbot?">
+                                        <div class="fw-bold small text-info"><i class="fas fa-robot me-1"></i> General</div>
+                                        <div class="small text-muted mt-1">What is this chatbot?</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="glass-card p-3 h-100 suggestion-card cursor-pointer" data-question="How does the matching engine work?">
+                                        <div class="fw-bold small text-info"><i class="fas fa-brain me-1"></i> Matching Engine</div>
+                                        <div class="small text-muted mt-1">How does matching work?</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="glass-card p-3 h-100 suggestion-card cursor-pointer" data-question="Can I add edit or delete FAQs?">
+                                        <div class="fw-bold small text-info"><i class="fas fa-user-shield me-1"></i> Dashboard</div>
+                                        <div class="small text-muted mt-1">Can I manage FAQs?</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="glass-card p-3 h-100 suggestion-card cursor-pointer" data-question="How can I deploy this chatbot?">
+                                        <div class="fw-bold small text-info"><i class="fas fa-cloud-upload-alt me-1"></i> DevOps</div>
+                                        <div class="small text-muted mt-1">How can I deploy?</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Input Block -->
+                    <div class="chat-input-area">
+                        <form id="chat-form" class="d-flex gap-2 align-items-center">
+                            
+                            <!-- Mic Button -->
+                            <button type="button" id="voice-input-btn" class="btn btn-lg btn-glass-secondary rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;" title="Voice input">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            
+                            <!-- Text Field -->
+                            <input type="text" id="chat-input" class="form-control form-glass-input py-2 px-3" placeholder="Type your FAQ question here..." autocomplete="off">
+                            
+                            <!-- Send Button -->
+                            <button type="submit" class="btn btn-lg btn-glass-primary rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;" title="Send message">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- jsPDF CDN for client transcript printing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Custom Scripts -->
+    <script src="{{ url_for('static', filename='js/voice.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+</body>
+</html>

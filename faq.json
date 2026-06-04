@@ -1,0 +1,42 @@
+[
+  {
+    "question": "What is this AI FAQ Chatbot?",
+    "answer": "This is an intelligent AI-powered FAQ Chatbot built using Python, Flask, NLTK, and Scikit-Learn. It leverages Natural Language Processing (NLP) techniques like TF-IDF vectorization, Cosine Similarity, and fuzzy string matching to understand and answer user queries instantly.",
+    "category": "General"
+  },
+  {
+    "question": "How does the matching engine work?",
+    "answer": "The engine preprocesses user inputs (lowercasing, punctuation removal, tokenization, stopword removal, and lemmatization) and computes TF-IDF vectors. It compares these vectors against stored FAQs using Cosine Similarity. If the similarity is low, it utilizes difflib fuzzy matching as a fallback to catch spelling typos.",
+    "category": "Technical"
+  },
+  {
+    "question": "Can I add, edit, or delete FAQs?",
+    "answer": "Yes! The application includes a comprehensive Admin Dashboard where authenticated administrators can search, create, modify, and delete FAQs. Additionally, administrators can perform bulk operations using CSV or JSON uploads.",
+    "category": "Features"
+  },
+  {
+    "question": "Does it support voice inputs?",
+    "answer": "Absolutely! The chatbot includes a Speech-To-Text feature for voice queries and a Text-To-Speech synthesizer that can read answers out loud. These features leverage standard browser Web Speech APIs.",
+    "category": "Features"
+  },
+  {
+    "question": "How can I deploy this chatbot?",
+    "answer": "The application is production-ready and fully dockerized. It can be easily deployed to modern cloud hosting platforms like Render, Railway, or any standard VM using Docker. Complete configuration files like Dockerfile, Procfile, and render.yaml are included.",
+    "category": "Deployment"
+  },
+  {
+    "question": "What happens if the chatbot does not know the answer?",
+    "answer": "If a user query scores below the minimum confidence threshold, the chatbot triggers a fallback response, informing the user that it doesn't have the exact answer and suggesting up to three of the most similar questions found.",
+    "category": "Technical"
+  },
+  {
+    "question": "How does the analytics dashboard track queries?",
+    "answer": "Every query made by users is logged anonymously with its match outcome, confidence score, and timestamp. The Analytics Dashboard compiles these logs to display key performance metrics such as daily volume, average confidence trends, and popular questions via interactive charts.",
+    "category": "Features"
+  },
+  {
+    "question": "Is my data secure?",
+    "answer": "Yes. Admin routes are protected by session-based authentication, and admin passwords are secure using SHA-256 password hashing. Input fields are validated, rate limits can be added, and standard CSRF/XSS protection best practices are followed.",
+    "category": "Technical"
+  }
+]
